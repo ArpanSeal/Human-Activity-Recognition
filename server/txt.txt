@@ -1,0 +1,547 @@
+
+
+
+# from flask import Flask
+
+# app = Flask(__name__)
+
+# @app.route('/')
+# def hello():
+#     return 'Hello, World!'
+
+# if __name__ == '__main__':
+#     app.run(host='192.168.245.200', port=3000)
+
+
+
+
+// import React, { useState, useEffect } from "react";
+
+// function App() {
+//   const [acceleration, setAcceleration] = useState({ x: null, y: null, z: null });
+//   const [rotationRate, setRotationRate] = useState({ alpha: null, beta: null, gamma: null });
+
+//   useEffect(() => {
+//     if (window.DeviceMotionEvent) {
+//       window.addEventListener("devicemotion", handleDeviceMotion);
+//     } else {
+//       alert("Device motion not supported");
+//     }
+
+//     return () => {
+//       window.removeEventListener("devicemotion", handleDeviceMotion);
+//     };
+//   }, []);
+
+//   const handleDeviceMotion = (event) => {
+//     setAcceleration({
+//       x: event.acceleration.x,
+//       y: event.acceleration.y,
+//       z: event.acceleration.z,
+//     });
+
+//     setRotationRate({
+//       alpha: event.rotationRate.alpha,
+//       beta: event.rotationRate.beta,
+//       gamma: event.rotationRate.gamma,
+//     });
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Collecting sensor data</h1>
+//       <p>Acceleration: {JSON.stringify(acceleration)}</p>
+//       <p>Rotation rate: {JSON.stringify(rotationRate)}</p>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+// import React, { useState, useEffect } from "react";
+// import * as tf from "@tensorflow/tfjs";
+// import * as tfvis from "@tensorflow/tfjs-vis";
+// import * as tfd from "@tensorflow/tfjs-data";
+// import { loadGraphModel } from "@tensorflow/tfjs-converter";
+// import { preprocessData } from "./utils";
+
+// function App() {
+//   const [acceleration, setAcceleration] = useState({
+//     x: null,
+//     y: null,
+//     z: null,
+//   });
+//   const [rotationRate, setRotationRate] = useState({
+//     alpha: null,
+//     beta: null,
+//     gamma: null,
+//   });
+//   const [model, setModel] = useState(null);
+
+//   useEffect(() => {
+//     if (window.DeviceMotionEvent) {
+//       window.addEventListener("devicemotion", handleDeviceMotion);
+//     } else {
+//       alert("Device motion not supported");
+//     }
+
+//     tfvis.visor().open();
+//     loadGraphModel("C://Users//arpan//OneDrive//Desktop//HAR React//model.json").then((loadedModel) => {
+//       setModel(loadedModel);
+//     });
+
+//     return () => {
+//       window.removeEventListener("devicemotion", handleDeviceMotion);
+//     };
+//   }, []);
+
+//   const handleDeviceMotion = (event) => {
+//     setAcceleration({
+//       x: event.acceleration.x,
+//       y: event.acceleration.y,
+//       z: event.acceleration.z,
+//     });
+
+//     setRotationRate({
+//       alpha: event.rotationRate.alpha,
+//       beta: event.rotationRate.beta,
+//       gamma: event.rotationRate.gamma,
+//     });
+
+//     if (model) {
+//       const inputData = preprocessData(acceleration, rotationRate);
+//       const inputTensor = tf.tensor(inputData, [1, inputData.length]);
+//       const prediction = model.predict(inputTensor);
+//       const predictedActivity = tf.argMax(prediction, (axis = 1)).dataSync()[0];
+//       console.log("Predicted activity:", predictedActivity);
+//     }
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Collecting sensor data</h1>
+//       <p>Acceleration: {JSON.stringify(acceleration)}</p>
+//       <p>Rotation rate: {JSON.stringify(rotationRate)}</p>
+//     </div>
+//   );
+// }
+// export default App;
+
+// import React, { useState, useEffect } from "react";
+// function App() {
+//   const [data, setData] = useState([]);
+
+//   useEffect(() => {
+//     if (window.DeviceMotionEvent) {
+//       window.addEventListener("devicemotion", handleDeviceMotion);
+//     } else {
+//       alert("Device motion not supported");
+//     }
+
+//     return () => {
+//       window.removeEventListener("devicemotion", handleDeviceMotion);
+//     };
+//   }, []);
+
+//   const handleDeviceMotion = (event) => {
+//     const newData = {
+//       ax: event.acceleration.x,
+//       ay: event.acceleration.y,
+//       az: event.acceleration.z,
+//       gx: event.rotationRate.alpha,
+//       gy: event.rotationRate.beta,
+//       gz: event.rotationRate.gamma,
+//     };
+
+//     setData((prevData) => [...prevData, newData]);
+//   };
+
+//   const downloadCSV = () => {
+//     const headers = ["ax", "ay", "az", "gx", "gy", "gz"];
+//     const csvData = [headers, ...data.map((item) => Object.values(item))];
+
+//     const blob = new Blob([csvData.map((row) => row.join(",")).join("\n")], { type: "text/csv;charset=utf-8;" });
+
+//     if (navigator.msSaveBlob) {
+//       navigator.msSaveBlob(blob, "sensor_data.csv");
+//     } else {
+//       const link = document.createElement("a");
+//       if (link.download !== undefined) {
+//         const url = URL.createObjectURL(blob);
+//         link.setAttribute("href", url);
+//         link.setAttribute("download", "sensor_data.csv");
+//         link.style.visibility = "hidden";
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//       }
+//     }
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Collecting sensor data</h1>
+//       <p>Acceleration: {JSON.stringify(data[data.length - 1]?.ax)}, {JSON.stringify(data[data.length - 1]?.ay)}, {JSON.stringify(data[data.length - 1]?.az)}</p>
+//       <p>Rotation rate: {JSON.stringify(data[data.length - 1]?.gx)}, {JSON.stringify(data[data.length - 1]?.gy)}, {JSON.stringify(data[data.length - 1]?.gz)}</p>
+//       <button onClick={downloadCSV}>Download CSV</button>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+function App() {
+  const [acceleration, setAcceleration] = useState({
+    x: null,
+    y: null,
+    z: null,
+  });
+  const [rotationRate, setRotationRate] = useState({
+    alpha: null,
+    beta: null,
+    gamma: null,
+  });
+  const [prediction, setPrediction] = useState(null);
+
+  useEffect(() => {
+    if (window.DeviceMotionEvent) {
+      window.addEventListener("devicemotion", handleDeviceMotion);
+    } else {
+      alert("Device motion not supported");
+    }
+
+    return () => {
+      window.removeEventListener("devicemotion", handleDeviceMotion);
+    };
+  }, []);
+
+  const handleDeviceMotion = (event) => {
+    setAcceleration({
+      x: event.acceleration.x,
+      y: event.acceleration.y,
+      z: event.acceleration.z,
+    });
+
+    setRotationRate({
+      alpha: event.rotationRate.alpha,
+      beta: event.rotationRate.beta,
+      gamma: event.rotationRate.gamma,
+    });
+
+    console.log(
+      event.acceleration.x,
+      event.acceleration.y,
+      event.acceleration.z,
+      event.rotationRate.alpha,
+      event.rotationRate.beta,
+      event.rotationRate.gamma
+    );
+
+    // Send sensor data to backend for prediction
+    axios
+      .post("http://192.168.192.200:5000/predict", {
+        ax: event.acceleration.x,
+        ay: event.acceleration.y,
+        az: event.acceleration.z,
+        gx: event.rotationRate.alpha,
+        gy: event.rotationRate.beta,
+        gz: event.rotationRate.gamma,
+      })
+      .then(function (response) {
+        setPrediction(response.data.prediction);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <div className="App">
+      <h1>Collecting sensor data</h1>
+      <p>Acceleration: {JSON.stringify(acceleration)}</p>
+      <p>Rotation rate: {JSON.stringify(rotationRate)}</p>
+      {prediction && <p>Prediction: {prediction}</p>}
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+// Actual---------------------------------------------
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./App.css";
+
+function App() {
+  const [acceleration, setAcceleration] = useState({
+    x: null,
+    y: null,
+    z: null,
+  });
+  const [rotationRate, setRotationRate] = useState({
+    alpha: null,
+    beta: null,
+    gamma: null,
+  });
+  const [magnitudeRate, setMagnitudeRate] = useState({
+    amag: null,
+    gmag: null,
+  });
+  const [prediction, setPrediction] = useState(null);
+
+  useEffect(() => {
+    if (window.DeviceMotionEvent) {
+      window.addEventListener("devicemotion", handleDeviceMotion);
+    } else {
+      alert("Device motion not supported");
+    }
+
+    return () => {
+      window.removeEventListener("devicemotion", handleDeviceMotion);
+    };
+  }, []);
+
+  const handleDeviceMotion = (event) => {
+    const ax = event.acceleration.x;
+    const ay = event.acceleration.y;
+    const az = event.acceleration.z;
+    const gx = event.rotationRate.alpha;
+    const gy = event.rotationRate.beta;
+    const gz = event.rotationRate.gamma;
+
+    // Calculate magnitude of acceleration vector
+    const aMagnitude = Math.sqrt(ax ** 2 + ay ** 2 + az ** 2);
+
+    // Calculate magnitude of rotation rate vector
+    const gMagnitude = Math.sqrt(gx ** 2 + gy ** 2 + gz ** 2);
+    setAcceleration({
+      x: ax,
+      y: ay,
+      z: az,
+    });
+
+    setRotationRate({
+      alpha: gx,
+      beta: gy,
+      gamma: gz,
+    });
+
+    setMagnitudeRate({
+      amag: aMagnitude,
+      gmag: gMagnitude,
+    });
+
+    console.log(ax, ay, az, gx, gy, gz, aMagnitude, gMagnitude);
+
+    // Send sensor data to backend for prediction
+    // axios
+    //   .post("http://192.168.235.200:5000/predict", {
+    //     ax: event.acceleration.x,
+    //     ay: event.acceleration.y,
+    //     az: event.acceleration.z,
+    //     gx: event.rotationRate.alpha,
+    //     gy: event.rotationRate.beta,
+    //     gz: event.rotationRate.gamma,
+    //   })
+    //   .then(function (response) {
+    //     setPrediction(response.data.prediction);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+
+    // setInterval(() => {
+    axios
+      .post("http://192.168.235.200:5000/predict", {
+        ax: ax,
+        ay: ay,
+        az: az,
+        gx: gx,
+        gy: gy,
+        gz: gz,
+        aMagnitude: aMagnitude,
+        gMagnitude: gMagnitude,
+      })
+      .then(function (response) {
+        setPrediction(response.data.prediction);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // }, 1000);
+  };
+
+  return (
+    <div className="container my-5">
+      <h1 className="text-center mb-5">Collecting sensor data</h1>
+      <div className="row">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Acceleration</h2>
+            </div>
+            <div className="card-body">
+              <ul className="list-group">
+                <li className="list-group-item">X-axis: {acceleration.x}</li>
+                <li className="list-group-item">Y-axis: {acceleration.y}</li>
+                <li className="list-group-item">Z-axis: {acceleration.z}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Rotation Rate</h2>
+            </div>
+            <div className="card-body">
+              <ul className="list-group">
+                <li className="list-group-item">Alpha: {rotationRate.alpha}</li>
+                <li className="list-group-item">Beta: {rotationRate.beta}</li>
+                <li className="list-group-item">Gamma: {rotationRate.gamma}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Magnitude Rate</h2>
+            </div>
+            <div className="card-body">
+              <ul className="list-group">
+                <li className="list-group-item">
+                  Acceleration: {magnitudeRate.amag}
+                </li>
+                <li className="list-group-item">
+                  Rotation: {magnitudeRate.gmag}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row mt-5">
+        <div className="col-md-6 mx-auto">
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Prediction</h2>
+            </div>
+            <div className="card-body text-center">
+              <h3>{prediction}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+// To download the csv for train dataset -------------------------->
+
+// import React, { useState, useEffect } from "react";
+// function App() {
+//   const [data, setData] = useState([]);
+
+//   useEffect(() => {
+//     if (window.DeviceMotionEvent) {
+//       window.addEventListener("devicemotion", handleDeviceMotion);
+//     } else {
+//       alert("Device motion not supported");
+//     }
+
+//     return () => {
+//       window.removeEventListener("devicemotion", handleDeviceMotion);
+//     };
+//   }, []);
+
+//   const handleDeviceMotion = (event) => {
+//     const ax = event.acceleration.x;
+//     const ay = event.acceleration.y;
+//     const az = event.acceleration.z;
+//     const gx = event.rotationRate.alpha;
+//     const gy = event.rotationRate.beta;
+//     const gz = event.rotationRate.gamma;
+
+//     // Calculate magnitude of acceleration vector
+//     const aMagnitude = Math.sqrt(ax**2 + ay**2 + az**2);
+
+//     // Calculate magnitude of rotation rate vector
+//     const gMagnitude = Math.sqrt(gx**2 + gy**2 + gz**2);
+
+//     // Add new features to the newData object
+//     const newData = {
+//       ax: ax,
+//       ay: ay,
+//       az: az,
+//       gx: gx,
+//       gy: gy,
+//       gz: gz,
+//       aMagnitude: aMagnitude,
+//       gMagnitude: gMagnitude,
+//     };
+
+//     setData((prevData) => [...prevData, newData]);
+//   };
+
+//   const downloadCSV = () => {
+//     const headers = ["ax", "ay", "az", "gx", "gy", "gz", "aMagnitude", "gMagnitude"];
+//     const csvData = [headers, ...data.map((item) => Object.values(item))];
+
+//     const blob = new Blob([csvData.map((row) => row.join(",")).join("\n")], { type: "text/csv;charset=utf-8;" });
+
+//     if (navigator.msSaveBlob) {
+//       navigator.msSaveBlob(blob, "sensor_data.csv");
+//     } else {
+//       const link = document.createElement("a");
+//       if (link.download !== undefined) {
+//         const url = URL.createObjectURL(blob);
+//         link.setAttribute("href", url);
+//         link.setAttribute("download", "sensor_data.csv");
+//         link.style.visibility = "hidden";
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//       }
+//     }
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Collecting sensor data</h1>
+//       <p>Acceleration: {JSON.stringify(data[data.length - 1]?.ax)}, {JSON.stringify(data[data.length - 1]?.ay)}, {JSON.stringify(data[data.length - 1]?.az)}</p>
+//       <p>Rotation rate: {JSON.stringify(data[data.length - 1]?.gx)}, {JSON.stringify(data[data.length - 1]?.gy)}, {JSON.stringify(data[data.length - 1]?.gz)}</p>
+//       <button onClick={downloadCSV}>Download CSV</button>
+//     </div>
+//   );
+// }
+
+// export default App;
