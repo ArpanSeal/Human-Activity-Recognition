@@ -109,17 +109,11 @@ def predict():
         return {"error": "All values are NaN."}
 
     # Make the prediction
-    # y_pred = model.predict(df)
-    # prediction = y_pred[0]
-    
-    # Update the GUI with the prediction value
-    if df['aMagnitude'][0]<1:
-        prediction = "NO_ACTIVITY"
-    elif df['aMagnitude'][0]>1 and df['aMagnitude'][0]<5:
-        prediction = "WALKING"
-    else:
-        prediction = "JOGGING"
-    
+    y_pred = model.predict(df)
+    prediction = y_pred[0]
+
+
+
     prediction_l = ""
     
     if prediction == "NO_ACTIVITY":
@@ -136,7 +130,7 @@ def predict():
         activity_counts["NO_ACTIVITY"] = 1
     elif prediction == "WALKING":
         activity_counts["WALKING"] = 1
-    elif prediction == "JOGGING":
+    elif prediction == "JOGG
         activity_counts["JOGGING"] = 1
     
     activity_counts["Total"] = (
