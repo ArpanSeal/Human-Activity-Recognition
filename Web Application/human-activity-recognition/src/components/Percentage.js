@@ -8,7 +8,7 @@ function Percentage() {
   useEffect(() => {
     async function fetchActivityData() {
       const response = await axios.get(
-        "http://192.168.155.200:5000/percentage"
+        "http://192.168.188.200:5000/percentage"
       );
       setActivityData(response.data);
     }

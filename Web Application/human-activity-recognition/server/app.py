@@ -232,7 +232,7 @@ def get_response_data():
 
 
 def run_flask():
-    app.run(host="192.168.155.200", port=5000)
+    app.run(host="192.168.188.200", port=5000)
 
 
 if __name__ == "__main__":

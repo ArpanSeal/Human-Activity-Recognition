@@ -184,7 +184,7 @@ export default function Prediction() {
 
   const collectDataAndPredict = () => {
     axios
-      .post("http://192.168.155.200:5000/predict", {
+      .post("http://192.168.188.200:5000/predict", {
         ax: ax,
         ay: ay,
         az: az,
